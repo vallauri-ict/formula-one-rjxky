@@ -4,18 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{34727C12-AFF0-4724-AD15-784D8107DE09}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>FormulaOneConsole</RootNamespace>
-    <AssemblyName>FormulaOneConsole</AssemblyName>
+    <ProjectGuid>{08CA23A2-7D65-4E85-86A2-567CFF1965D9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FormulaOneLibrary</RootNamespace>
+    <AssemblyName>FormulaOneLibrary</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,7 +24,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -44,17 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Models\Circuit.cs" />
+    <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\Driver.cs" />
+    <Compile Include="Models\Race.cs" />
+    <Compile Include="Models\Result.cs" />
+    <Compile Include="Models\Team.cs" />
+    <Compile Include="Models\TeamsResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FormulaOneLibrary\FormulaOneLibrary.csproj">
-      <Project>{08ca23a2-7d65-4e85-86a2-567cff1965d9}</Project>
-      <Name>FormulaOneLibrary</Name>
-    </ProjectReference>
+    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

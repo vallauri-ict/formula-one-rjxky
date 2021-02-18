@@ -1,0 +1,6 @@
+C:\Users\Pc\Desktop\formula-one-PalumboValerio-develop\FormulaOneLibrary\bin\Debug\FormulaOneLibrary.dll
+C:\Users\Pc\Desktop\formula-one-PalumboValerio-develop\FormulaOneLibrary\bin\Debug\FormulaOneLibrary.pdb
+C:\Users\Pc\Desktop\formula-one-PalumboValerio-develop\FormulaOneLibrary\obj\Debug\FormulaOneLibrary.csprojAssemblyReference.cache
+C:\Users\Pc\Desktop\formula-one-PalumboValerio-develop\FormulaOneLibrary\obj\Debug\FormulaOneLibrary.csproj.CoreCompileInputs.cache
+C:\Users\Pc\Desktop\formula-one-PalumboValerio-develop\FormulaOneLibrary\obj\Debug\FormulaOneLibrary.dll
+C:\Users\Pc\Desktop\formula-one-PalumboValerio-develop\FormulaOneLibrary\obj\Debug\FormulaOneLibrary.pdb

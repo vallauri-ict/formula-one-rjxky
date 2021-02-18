@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.IO;
+using System.Threading;
+using ClassUtilities;
 
 namespace FormulaOneConsole
 {
@@ -8,100 +10,123 @@ namespace FormulaOneConsole
     {
         public const string WORKINGPATH = @"C:\data\formulaone\";
         private const string CONNECTION_STRING = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + WORKINGPATH + @"FormulaOne.mdf;Integrated Security=True";
+        public static string THISDATAPATH = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\Data\\";
+        public static string DB ="[" + WORKINGPATH + "FormulaOne.mdf]";
 
         static void Main(string[] args)
         {
-            char scelta = ' ';
+            Utilities utilitiesClass = new Utilities(WORKINGPATH, CONNECTION_STRING, THISDATAPATH, DB);
+            char choice = ' ';
+            bool wrongChoice;
+
             do
             {
+                wrongChoice = false;
+                Console.BackgroundColor = ConsoleColor.DarkRed;
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine("\n*** FORMULA ONE - BATCH SCRIPTS ***\n");
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("1 - Create Countries");
                 Console.WriteLine("2 - Create Teams");
                 Console.WriteLine("3 - Create Drivers");
+                Console.WriteLine("4 - Create Circuits");
+                Console.WriteLine("5 - Create Races");
+                Console.WriteLine("6 - Create Results");
+                Console.WriteLine("7 - Create TeamsResults");
+                Console.WriteLine("8 - Create Relations");
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("------------------");
-                Console.WriteLine("R - RESET DB");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("a - Create all tables");
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("d - Drop all tables");
+                Console.WriteLine("p - Drop all relations");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("r - Reset DB");
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("------------------");
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.BackgroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("X - EXIT\n");
-                scelta = Console.ReadKey(true).KeyChar;
-                switch (scelta)
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.BackgroundColor = ConsoleColor.Black;
+                choice = Console.ReadKey(true).KeyChar;
+                switch (choice)
                 {
                     case '1':
-                        ExecuteSqlScript("Countries.sql");
+                        utilitiesClass.CopySQLFiles();
+                        utilitiesClass.ExecuteSqlScript("Countries.sql");
                         break;
                     case '2':
-                        ExecuteSqlScript("Teams.sql");
+                        utilitiesClass.CopySQLFiles();
+                        utilitiesClass.ExecuteSqlScript("Teams.sql");
                         break;
                     case '3':
-                        ExecuteSqlScript("Drivers.sql");
+                        utilitiesClass.CopySQLFiles();
+                        utilitiesClass.ExecuteSqlScript("Drivers.sql");
                         break;
-                    case 'R':
-                        ResetDb();
+                    case '4':
+                        utilitiesClass.CopySQLFiles();
+                        utilitiesClass.ExecuteSqlScript("Circuits.sql");
+                        break;
+                    case '5':
+                        utilitiesClass.CopySQLFiles();
+                        utilitiesClass.ExecuteSqlScript("Races.sql");
+                        break;
+                    case '6':
+                        utilitiesClass.CopySQLFiles();
+                        utilitiesClass.ExecuteSqlScript("Results.sql");
+                        break;
+                    case '7':
+                        utilitiesClass.CopySQLFiles();
+                        utilitiesClass.ExecuteSqlScript("TeamsResults.sql");
+                        break;
+                    case '8':
+                        utilitiesClass.CopySQLFiles();
+                        utilitiesClass.ExecuteSqlScript("Relations.sql");
+                        break;
+                    case 'a':
+                        utilitiesClass.CopySQLFiles();
+                        utilitiesClass.Set();
+                        break;
+                    case 'd':
+                        utilitiesClass.CopySQLFiles();
+                        utilitiesClass.Drop();
+                        break;
+                    case 'p':
+                        utilitiesClass.CopySQLFiles();
+                        utilitiesClass.ExecuteSqlScript("DropRelations.sql");
+                        break;
+                    case 'r':
+                        utilitiesClass.CopySQLFiles();
+                        utilitiesClass.ResetDB();
                         break;
                     default:
-                        if (scelta != 'X' && scelta != 'x') Console.WriteLine("\nUncorrect Choice - Try Again\n");
+                        if (choice != 'X' && choice != 'x')
+                        {
+                            Console.WriteLine("\nUncorrect Choice - Try Again\n");
+                            Thread.Sleep(1000);
+                            wrongChoice = true;
+                        }
                         break;
                 }
-            } while (scelta != 'X' && scelta != 'x');
-        }
-
-        private static void ResetDb()
-        {
-            var con = new SqlConnection(CONNECTION_STRING);
-            try
-            {
-                con.Open();
-
-                ExecuteQuery("DROP TABLE IF EXISTS Country", con);
-                ExecuteQuery("DROP TABLE IF EXISTS Driver", con);
-                ExecuteQuery("DROP TABLE IF EXISTS Team", con);
-                con.Close();
-
-                ExecuteSqlScript("Countries.sql");
-                ExecuteSqlScript("Teams.sql");
-                ExecuteSqlScript("Drivers.sql");
-                Console.WriteLine("Reset completato correttamente.");
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Errore durante il reset.");
-            }
-        }
-
-        private static void ExecuteQuery(string query, SqlConnection con)
-        {
-            var cmd = new SqlCommand(query, con);
-            cmd.ExecuteNonQuery();
-        }
-
-        static void ExecuteSqlScript(string sqlScriptName)
-        {
-            var fileContent = File.ReadAllText(WORKINGPATH + sqlScriptName);
-            fileContent = fileContent.Replace("\r\n", "");
-            fileContent = fileContent.Replace("\r", "");
-            fileContent = fileContent.Replace("\n", "");
-            fileContent = fileContent.Replace("\t", "");
-            var sqlqueries = fileContent.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-
-            var con = new SqlConnection(CONNECTION_STRING);
-            var cmd = new SqlCommand("query", con);
-            con.Open(); int i = 0; int nErr = 0;
-            foreach (var query in sqlqueries)
-            {
-                cmd.CommandText = query; i++;
-                try
+                if (choice != 'X' && choice != 'x' && !wrongChoice)
                 {
-                    cmd.ExecuteNonQuery();
+                    Thread.Sleep(500);
+                    ConsoleKeyInfo c;
+                    Console.Write("\n\nPress enter to continue ");
+                    do
+                    {
+                        c = Console.ReadKey();
+                        if(c.Key != ConsoleKey.Enter)
+                        {
+                            Console.Write("\b\b   \b\b");
+                        }
+                    } while (c.Key != ConsoleKey.Enter);
                 }
-                catch (SqlException err)
-                {
-                    Console.WriteLine("Errore in esecuzione della query numero: " + i);
-                    Console.WriteLine("\tErrore SQL: " + err.Number + " - " + err.Message);
-                    nErr++;
-                }
-            }
-            con.Close();
-            string finalMessage = nErr == 0 ? "Script " + sqlScriptName + " ended successfully without errors" : "Script ended with " + nErr + " errors";0
-            Console.WriteLine(finalMessage);
-        }
+                Console.Clear();
+            } while (choice != 'X' && choice != 'x');
+        }   
     }
 }
